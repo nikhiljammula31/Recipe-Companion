@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Recipe Finder</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="bg">
+
+<!-- Navbar -->
+<div class="navbar">
+    <div class="logo">🍲 CookMate-Your Smart Recipe Companion</div>
+    <div class="profile-icon" onclick="goProfile()">👤</div>
+</div>
+
+<!-- Main Section -->
+<div class="overlay">
+    <div class="form-box" style="background:rgba(255,255,255,0.15); backdrop-filter:blur(10px);">
+
+        <div style="display:flex; gap:40px; justify-content:center; flex-wrap:wrap;">
+
+            <!-- Add Recipe -->
+            <div style="text-align:center;">
+                <img src="https://cdn-icons-png.flaticon.com/512/1046/1046784.png"
+                     width="100" style="margin-bottom:15px;">
+                <br>
+                <button onclick="location.href='add.html'">Add Recipe</button>
+            </div>
+
+            <!-- Find Recipe -->
+            <div style="text-align:center;">
+                <img src="https://cdn-icons-png.flaticon.com/512/622/622669.png"
+                     width="100" style="margin-bottom:15px;">
+                <br>
+                <button onclick="location.href='search.html'">Find Recipe</button>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAR1_-3ZTzIoLBnpQCST5_01XH8ef6_YAE",
+  authDomain: "recipefinder-67c3b.firebaseapp.com",
+  projectId: "recipefinder-67c3b",
+  storageBucket: "recipefinder-67c3b.firebasestorage.app",
+  messagingSenderId: "1004341147480",
+  appId: "1:1004341147480:web:71e531894fce53c998172d",
+  measurementId: "G-924DZ6MGFX"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+onAuthStateChanged(auth, (user) => {
+    if (!user) window.location.href = "login.html";
+});
+
+window.goProfile = function() {
+    window.location.href = "profile.html";
+};
+</script>
+
+</body>
+</html>

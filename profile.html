@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Profile - Recipe Finder</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg">
+
+<div class="overlay">
+    <div class="form-box">
+        <h2>👤 Profile</h2>
+
+        <div id="profileData">
+            <p><strong>Email:</strong> <span id="userEmail"></span></p>
+            <p><strong>User ID:</strong> <span id="userUID"></span></p>
+            <p><strong>Account Created:</strong> <span id="createdAt"></span></p>
+        </div>
+
+        <button onclick="logout()">Logout</button>
+        <button onclick="location.href='index.html'">Back to Home</button>
+    </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAR1_-3ZTzIoLBnpQCST5_01XH8ef6_YAE",
+  authDomain: "recipefinder-67c3b.firebaseapp.com",
+  projectId: "recipefinder-67c3b",
+  storageBucket: "recipefinder-67c3b.firebasestorage.app",
+  messagingSenderId: "1004341147480",
+  appId: "1:1004341147480:web:71e531894fce53c998172d",
+  measurementId: "G-924DZ6MGFX"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+// Check if user logged in
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        document.getElementById("userEmail").innerText = user.email;
+        document.getElementById("userUID").innerText = user.uid;
+        document.getElementById("createdAt").innerText = new Date(user.metadata.creationTime).toLocaleString();
+    } else {
+        window.location.href = "login.html";
+    }
+});
+
+window.logout = function () {
+    signOut(auth).then(() => {
+        window.location.href = "login.html";
+    });
+};
+</script>
+
+</body>
+</html>

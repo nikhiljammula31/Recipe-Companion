@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Recipe</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg">
+
+<!-- Navbar -->
+<div class="navbar">
+    <div class="logo">🍲CookMate-Your Smart Recipe Companion</div>
+    <div class="profile-icon" onclick="goProfile()">👤</div>
+</div>
+
+<div class="overlay">
+    <div class="form-box">
+        <h2>Add Recipe</h2>
+
+        <input type="text" id="name" placeholder="Dish Name">
+        <input type="text" id="ingredients" placeholder="Ingredients">
+        <input type="number" id="time" placeholder="Estimated Time (minutes)">
+        
+        <!-- ✅ UPDATED TEXTAREA -->
+        <textarea id="steps" placeholder="Enter steps..." onkeydown="handleSteps(event)"></textarea>
+
+        <button onclick="addRecipe()">Add Recipe</button>
+
+        <button onclick="location.href='index.html'">Back</button>
+    </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAR1_-3ZTzIoLBnpQCST5_01XH8ef6_YAE",
+  authDomain: "recipefinder-67c3b.firebaseapp.com",
+  projectId: "recipefinder-67c3b",
+  storageBucket: "recipefinder-67c3b.firebasestorage.app",
+  messagingSenderId: "1004341147480",
+  appId: "1:1004341147480:web:71e531894fce53c998172d",
+  measurementId: "G-924DZ6MGFX"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+// Protect page
+onAuthStateChanged(auth, (user) => {
+    if (!user) window.location.href = "login.html";
+});
+
+window.goProfile = function() {
+    window.location.href = "profile.html";
+};
+
+// ✅ AUTO NUMBERING WHILE TYPING
+window.handleSteps = function(event) {
+    const textarea = event.target;
+
+    // Add "1) " when user starts typing
+    if (textarea.value === "" && event.key !== "Backspace") {
+        textarea.value = "1) ";
+    }
+
+    // When Enter is pressed → new numbered step
+    if (event.key === "Enter") {
+        event.preventDefault();
+
+        let lines = textarea.value.split("\n");
+        let nextNumber = lines.length + 1;
+
+        textarea.value += "\n" + nextNumber + ") ";
+    }
+};
+
+// Ensure first line starts with 1) on click
+document.addEventListener("DOMContentLoaded", () => {
+    const stepsBox = document.getElementById("steps");
+
+    stepsBox.addEventListener("focus", function() {
+        if (this.value === "") {
+            this.value = "1) ";
+        }
+    });
+});
+
+// ✅ ADD RECIPE FUNCTION
+window.addRecipe = async function() {
+    const name = document.getElementById("name").value.trim();
+    const ingredients = document.getElementById("ingredients").value.trim();
+    const time = document.getElementById("time").value.trim();
+    const steps = document.getElementById("steps").value.trim();
+
+    if (!name || !ingredients || !time || !steps) {
+        alert("❌ Please fill all fields");
+        return;
+    }
+
+    try {
+        await addDoc(collection(db, "recipes"), {
+            name,
+            ingredients,
+            time,
+            steps
+        });
+
+        // ✅ POPUP
+        alert("✅ Recipe Added Successfully!");
+
+        // ✅ RESET FORM
+        document.getElementById("name").value = "";
+        document.getElementById("ingredients").value = "";
+        document.getElementById("time").value = "";
+        document.getElementById("steps").value = "";
+
+    } catch (error) {
+        alert("❌ Error adding recipe");
+    }
+};
+</script>
+
+</body>
+</html>

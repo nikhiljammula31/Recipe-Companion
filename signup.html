@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Sign Up</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="bg">
+
+<div class="overlay">
+<div class="form-box">
+<h2>Sign Up</h2>
+
+<input type="email" id="email" placeholder="Email">
+<input type="password" id="password" placeholder="Password">
+<button onclick="signup()">Sign Up</button>
+
+<p id="msg"></p>
+<button onclick="location.href='login.html'">Back</button>
+
+</div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAR1_-3ZTzIoLBnpQCST5_01XH8ef6_YAE",
+  authDomain: "recipefinder-67c3b.firebaseapp.com",
+  projectId: "recipefinder-67c3b",
+  storageBucket: "recipefinder-67c3b.firebasestorage.app",
+  messagingSenderId: "1004341147480",
+  appId: "1:1004341147480:web:71e531894fce53c998172d",
+  measurementId: "G-924DZ6MGFX"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+window.signup = async function() {
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    const msg = document.getElementById("msg");
+
+    try {
+        await createUserWithEmailAndPassword(auth, email, password);
+        window.location.href = "index.html";
+    } catch (error) {
+        msg.innerText = "❌ " + error.message;
+        msg.style.color = "red";
+    }
+};
+</script>
+
+</body>
+</html>
